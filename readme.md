@@ -22,3 +22,6 @@ docker tag flask-app1:latest 282293003762.dkr.ecr.us-east-1.amazonaws.com/flask_
 5. Subir la imagen a ECR
 
 docker push 282293003762.dkr.ecr.us-east-1.amazonaws.com/flask_simple_app_repository:latest
+
+
+

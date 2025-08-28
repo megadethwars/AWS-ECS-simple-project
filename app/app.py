@@ -1,10 +1,18 @@
 from flask import Flask
+import os
+from config import get_config
+
+# Puedes pasar el ambiente como argumento aquí:
+env = os.environ.get("APP_ENV", "local")
+ConfigClass = get_config(env)
+
+print(ConfigClass.MENSAJE)
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return '¡Hola, mundo desde Flask! version 3'
+    return str(ConfigClass.MENSAJE)
 
 if __name__ == '__main__':
-    app.run(debug=True,host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0')
