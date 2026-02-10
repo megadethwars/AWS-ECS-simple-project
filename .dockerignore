@@ -1,0 +1,50 @@
+# Archivos de Git
+.git
+.gitignore
+
+# Archivos de Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.coverage
+.coverage.*
+.pytest_cache
+.tox
+.venv
+venv/
+env/
+
+# Archivos de IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Archivos de AWS
+.aws
+aws-credentials
+
+# Archivos de Docker
+Dockerfile.*
+docker-compose.*
+
+# Archivos de documentación
+*.md
+README.*
+
+# Logs
+*.log
+logs/
+
+# Archivos temporales
+.tmp
+.temp
+node_modules/
+.DS_Store
+
+# Build artifacts
+buildspec.yml
