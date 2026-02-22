@@ -1,16 +1,16 @@
 pipeline {
     agent any
     
-    tools {
+    /*tools {
         // Configurar Python como herramienta (requiere Python Plugin en Jenkins)
         python 'Python3'
-    }
+    }*/
 
     environment {
         IMAGE_NAME = "flask-app-local"
         CONTAINER_NAME = "contenedor-flask-jenkins"
         // Agregar Python al PATH como backup
-        PATH = "C:\\Python313;C:\\Python313\\Scripts;C:\\Users\\Users\\AppData\\Local\\Programs\\Python\\Python313;C:\\Users\\Users\\AppData\\Local\\Programs\\Python\\Python313\\Scripts;${env.PATH}"
+       // PATH = "C:\\Python313;C:\\Python313\\Scripts;C:\\Users\\Users\\AppData\\Local\\Programs\\Python\\Python313;C:\\Users\\Users\\AppData\\Local\\Programs\\Python\\Python313\\Scripts;${env.PATH}"
     }
 
     stages {
