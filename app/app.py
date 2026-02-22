@@ -16,7 +16,7 @@ def home():
 
 @app.route('/actuator')
 def actuator():
-    return "actuator 1.5"
+    return "actuator 1.6"
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
