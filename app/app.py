@@ -14,5 +14,9 @@ app = Flask(__name__)
 def home():
     return str(ConfigClass.MENSAJE)
 
+@app.route('/actuator')
+def actuator():
+    return "actuator 2.0"
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

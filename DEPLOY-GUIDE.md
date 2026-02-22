@@ -4,6 +4,21 @@ Esta guía te ayudará a desplegar tu aplicación Flask en AWS Fargate paso a pa
 
 ## Requisitos Previos
 
+IAM de cloudformation:
+
+AdministratorAccess
+Administrada por AWS: función de trabajo
+
+AWSCloudFormationFullAccess
+Administrada por AWS
+
+AWSCloudFormationReadOnlyAccess
+Administrada por AWS
+
+AWSCodeDeployRoleForCloudFormation
+Administrada por AWS
+
+
 1. **AWS CLI configurado** con credenciales apropiadas
    ```bash
    aws configure
@@ -43,6 +58,9 @@ docker build -t "${ECR_REPO_NAME}:latest" .
 docker tag "${ECR_REPO_NAME}:latest" "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO_NAME}:latest"
 docker push "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO_NAME}:latest"
 ```
+
+# para probar
+docker run -p 5000:5000 "${ECR_REPO_NAME}" -- 
 
 ### 2. Crear Roles de IAM Necesarios
 
