@@ -28,17 +28,8 @@ pipeline {
                 echo 'Verificando coverage mínimo del 50%...'
                 // El flag --cov-fail-under=50 ya hace que falle si es menor a 50%
                 // Pero agregamos verificación adicional para logs más claros
-                bat """
-                    powershell -Command "
-                    \$coverage = (python -m pytest --cov=app --cov-report=term | Select-String 'TOTAL.*([0-9]+)%' | ForEach-Object { \$_.Matches.Groups[1].Value });
-                    if ([int]\$coverage -lt 50) { 
-                        Write-Host 'ERROR: Coverage (\$coverage%) es menor al 50% requerido'; 
-                        exit 1 
-                    } else { 
-                        Write-Host 'SUCCESS: Coverage (\$coverage%) cumple el requisito mínimo del 50%' 
-                    }
-                    "
-                """
+                bat "python -m pytest --cov=app --cov-report=html --cov-report=term-missing --cov-fail-under=50"
+                
                 
                 echo 'Pruebas unitarias y coverage verificados exitosamente!'  
             }
