@@ -18,31 +18,19 @@ pipeline {
         stage('Unit Tests & Coverage') {
             steps {
                 echo 'Instalando dependencias de testing...'
-                // Instalar dependencias de Python para las pruebas (con ruta absoluta como backup)
-                bat """if exist "C:\Users\leone\AppData\Local\Programs\Python\Python313\python.exe" (
-                    "C:\Users\leone\AppData\Local\Programs\Python\Python313\python.exe" -m pip install -r requirements.txt
-                ) else (
-                    python -m pip install -r requirements.txt
-                )"""
+                // Instalar dependencias de Python para las pruebas
+                bat "pip install -r requirements.txt"
                 
                 echo 'Ejecutando pruebas unitarias con coverage...'
-                // Ejecutar pruebas con coverage y generar reporte usando python -m pytest (con ruta absoluta como backup)
-                bat """if exist "C:\Users\leone\AppData\Local\Programs\Python\Python313\python.exe" (
-                    "C:\Users\leone\AppData\Local\Programs\Python\Python313\python.exe" -m pytest --cov=app --cov-report=html --cov-report=term-missing --cov-fail-under=50
-                ) else (
-                    python -m pytest --cov=app --cov-report=html --cov-report=term-missing --cov-fail-under=50
-                )"""
+                // Ejecutar pruebas con coverage y generar reporte usando python -m pytest
+                bat "python -m pytest --cov=app --cov-report=html --cov-report=term-missing --cov-fail-under=50"
                 
                 echo 'Verificando coverage mínimo del 50%...'
                 // El flag --cov-fail-under=50 ya hace que falle si es menor a 50%
                 // Pero agregamos verificación adicional para logs más claros
                 bat """
                     powershell -Command "
-                    if (Test-Path 'C:\\Users\\leone\\AppData\\Local\\Programs\\Python\\Python313\\python.exe') {
-                        \$coverage = (& 'C:\\Users\\leone\\AppData\\Local\\Programs\\Python\\Python313\\python.exe' -m pytest --cov=app --cov-report=term | Select-String 'TOTAL.*([0-9]+)%' | ForEach-Object { \$_.Matches.Groups[1].Value });
-                    } else {
-                        \$coverage = (python -m pytest --cov=app --cov-report=term | Select-String 'TOTAL.*([0-9]+)%' | ForEach-Object { \$_.Matches.Groups[1].Value });
-                    }
+                    \$coverage = (python -m pytest --cov=app --cov-report=term | Select-String 'TOTAL.*([0-9]+)%' | ForEach-Object { \$_.Matches.Groups[1].Value });
                     if ([int]\$coverage -lt 50) { 
                         Write-Host 'ERROR: Coverage (\$coverage%) es menor al 50% requerido'; 
                         exit 1 
