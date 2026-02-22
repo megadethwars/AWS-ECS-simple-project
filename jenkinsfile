@@ -26,9 +26,15 @@ pipeline {
 
         stage('Despliegue Local') {
             steps {
-                echo 'Lanzando la aplicación en http://localhost:5000'
-                // Corre el contenedor en segundo plano (-d) mapeando el puerto 5000
-                bat "docker run -d --name ${CONTAINER_NAME} -p 5000:5000 ${IMAGE_NAME}"
+                echo 'Verificando archivo de configuración...'
+                // Verifica que existe el archivo .env.docker
+                bat "if not exist .env.docker (echo Error: .env.docker no encontrado && exit 1)"
+                
+                echo 'Lanzando la aplicación en http://localhost:5000 con configuración DEV'
+                // Corre el contenedor usando el archivo .env.docker para variables de entorno
+                bat "docker run -d --name ${CONTAINER_NAME} -p 5000:5000 --env-file .env.docker ${IMAGE_NAME}"
+                
+                echo 'Aplicación desplegada con ambiente DEV'
             }
         }
     }
