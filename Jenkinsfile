@@ -12,7 +12,7 @@ pipeline {
             steps {
                 echo 'Instalando dependencias de testing...'
                 // Instalar dependencias de Python para las pruebas
-                bat "pip3 install -r requirements.txt"
+                bat "python -m pip install -r requirements.txt"
                 
                 echo 'Ejecutando pruebas unitarias con coverage...'
                 // Ejecutar pruebas con coverage y generar reporte usando python -m pytest
