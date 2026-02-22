@@ -5,6 +5,7 @@ from config import get_config
 # Importar blueprints desde views
 from views.home import home_bp
 from views.actuator import actuator_bp
+from views.iot_devices import iot_devices_bp
 
 # Puedes pasar el ambiente como argumento aquí:
 env = os.environ.get("APP_ENV", "local")
@@ -17,6 +18,7 @@ app = Flask(__name__)
 # Registrar blueprints
 app.register_blueprint(home_bp)
 app.register_blueprint(actuator_bp)
+app.register_blueprint(iot_devices_bp)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

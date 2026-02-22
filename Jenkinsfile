@@ -37,5 +37,35 @@ pipeline {
                 echo 'Aplicación desplegada correctamente con configuración DEV'
             }
         }
+
+        stage('Testing de Endpoints') {
+            steps {
+                echo 'Esperando a que la aplicación esté lista...'
+                // Espera 10 segundos para que el contenedor esté completamente iniciado
+                bat "timeout /t 10 /nobreak"
+                
+                echo 'Probando endpoints de IoT...'
+                
+                // Test del endpoint principal
+                bat "curl -f http://localhost:5000/ || (echo Error: Endpoint principal falló && exit 1)"
+                
+                // Test del endpoint de actuator
+                bat "curl -f http://localhost:5000/actuator || (echo Error: Endpoint actuator falló && exit 1)"
+                
+                // Test del endpoint de healthcheck
+                bat "curl -f http://localhost:5000/healthcheck || (echo Error: Endpoint healthcheck falló && exit 1)"
+                
+                // Test del endpoint de dispositivos IoT
+                bat "curl -f http://localhost:5000/api/devices || (echo Error: Endpoint IoT devices falló && exit 1)"
+                
+                // Test del resumen de dispositivos IoT 
+                bat "curl -f http://localhost:5000/api/devices/summary || (echo Error: Endpoint IoT summary falló && exit 1)"
+                
+                // Test de un dispositivo específico
+                bat "curl -f http://localhost:5000/api/devices/TEMP_001 || (echo Error: Endpoint IoT device específico falló && exit 1)"
+                
+                echo 'Todos los tests de endpoints pasaron exitosamente!'
+            }
+        }
     }
 }
