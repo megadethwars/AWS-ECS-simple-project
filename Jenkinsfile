@@ -46,23 +46,23 @@ pipeline {
                 
                 echo 'Probando endpoints de IoT...'
                 
-                // Test del endpoint principal
-                bat "curl -f http://localhost:5000/ || (echo Error: Endpoint principal falló && exit 1)"
+                // Test del endpoint principal usando PowerShell
+                bat "powershell -Command \"try { Invoke-WebRequest -Uri 'http://localhost:5000/' -UseBasicParsing | Out-Null; Write-Host 'Endpoint principal OK' } catch { Write-Host 'Error: Endpoint principal falló'; exit 1 }\""
                 
                 // Test del endpoint de actuator
-                bat "curl -f http://localhost:5000/actuator || (echo Error: Endpoint actuator falló && exit 1)"
+                bat "powershell -Command \"try { Invoke-WebRequest -Uri 'http://localhost:5000/actuator' -UseBasicParsing | Out-Null; Write-Host 'Endpoint actuator OK' } catch { Write-Host 'Error: Endpoint actuator falló'; exit 1 }\""
                 
                 // Test del endpoint de healthcheck
-                bat "curl -f http://localhost:5000/healthcheck || (echo Error: Endpoint healthcheck falló && exit 1)"
+                bat "powershell -Command \"try { Invoke-WebRequest -Uri 'http://localhost:5000/healthcheck' -UseBasicParsing | Out-Null; Write-Host 'Endpoint healthcheck OK' } catch { Write-Host 'Error: Endpoint healthcheck falló'; exit 1 }\""
                 
                 // Test del endpoint de dispositivos IoT
-                bat "curl -f http://localhost:5000/api/devices || (echo Error: Endpoint IoT devices falló && exit 1)"
+                bat "powershell -Command \"try { Invoke-WebRequest -Uri 'http://localhost:5000/api/devices' -UseBasicParsing | Out-Null; Write-Host 'Endpoint IoT devices OK' } catch { Write-Host 'Error: Endpoint IoT devices falló'; exit 1 }\""
                 
                 // Test del resumen de dispositivos IoT 
-                bat "curl -f http://localhost:5000/api/devices/summary || (echo Error: Endpoint IoT summary falló && exit 1)"
+                bat "powershell -Command \"try { Invoke-WebRequest -Uri 'http://localhost:5000/api/devices/summary' -UseBasicParsing | Out-Null; Write-Host 'Endpoint IoT summary OK' } catch { Write-Host 'Error: Endpoint IoT summary falló'; exit 1 }\""
                 
                 // Test de un dispositivo específico
-                bat "curl -f http://localhost:5000/api/devices/TEMP_001 || (echo Error: Endpoint IoT device específico falló && exit 1)"
+                bat "powershell -Command \"try { Invoke-WebRequest -Uri 'http://localhost:5000/api/devices/TEMP_001' -UseBasicParsing | Out-Null; Write-Host 'Endpoint IoT device específico OK' } catch { Write-Host 'Error: Endpoint IoT device específico falló'; exit 1 }\""
                 
                 echo 'Todos los tests de endpoints pasaron exitosamente!'
             }
