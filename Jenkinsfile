@@ -42,7 +42,7 @@ pipeline {
             steps {
                 echo 'Esperando a que la aplicación esté lista...'
                 // Espera 10 segundos para que el contenedor esté completamente iniciado
-                bat "timeout /t 10 /nobreak"
+                bat "powershell -Command \"Start-Sleep 10\"" 
                 
                 echo 'Probando endpoints de IoT...'
                 
