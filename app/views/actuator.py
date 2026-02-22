@@ -7,7 +7,7 @@ actuator_bp = Blueprint('actuator', __name__)
 @actuator_bp.route('/actuator')
 def actuator():
     """Endpoint de actuator para verificar el estado de la aplicación"""
-    return "actuator 1.7"
+    return "actuator 1.8"
 
 @actuator_bp.route('/healthcheck')
 def healthcheck():
