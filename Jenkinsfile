@@ -59,7 +59,7 @@ pipeline {
                 bat "docker tag ${IMAGE_NAME} ${IMAGE_NAME}:dev"
                 
                 echo 'Verificando imagen creada...'
-                bat "docker images | findstr ${IMAGE_NAME}"
+                bat "powershell -Command \"docker images | Select-String '${IMAGE_NAME}'\""
             }
         }
 
