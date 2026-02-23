@@ -71,6 +71,8 @@ pipeline {
                 bat "if not exist k8s\\dev\\deployment.yaml (echo Error: Archivos K8s DEV no encontrados && exit 1)"
                 
                 echo 'Desplegando aplicación en Kubernetes DEV...'
+
+                bat "kubectl config view"
                 // Aplicar toda la configuración de DEV
                 bat "kubectl apply -f k8s/dev/ --validate=false"
                 
