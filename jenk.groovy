@@ -38,13 +38,13 @@ pipeline {
             steps {
                 echo 'Limpiando despliegue anterior de Kubernetes DEV...'
                 // Eliminar despliegue anterior si existe para evitar conflictos
-                bat "kubectl delete -f k8s/dev/ --ignore-not-found=true || exit 0"
+                bat "kubectl delete -f k8s/dev/ --ignore-not-found=true --validate=false || exit 0"
                 
                 echo 'Esperando a que los recursos se liberen...'
                 bat "powershell -Command \"Start-Sleep 10\""
                 
                 echo 'Creando namespaces si no existen...'
-                bat "kubectl apply -f k8s/namespaces.yaml || exit 0"
+                bat "kubectl apply -f k8s/namespaces.yaml --validate=false || exit 0"
             }
         }
 
@@ -72,7 +72,7 @@ pipeline {
                 
                 echo 'Desplegando aplicación en Kubernetes DEV...'
                 // Aplicar toda la configuración de DEV
-                bat "kubectl apply -f k8s/dev/"
+                bat "kubectl apply -f k8s/dev/ --validate=false"
                 
                 echo 'Esperando a que el deployment esté listo...'
                 // Esperar a que el deployment esté disponible
