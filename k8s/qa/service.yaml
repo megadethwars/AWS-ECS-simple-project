@@ -1,0 +1,19 @@
+# Service para ambiente QA
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-iot-service-qa
+  namespace: flask-app-qa
+  labels:
+    app: flask-iot-app
+    environment: qa
+spec:
+  type: ClusterIP  # QA: ClusterIP + Ingress para acceso externo
+  ports:
+  - port: 80
+    targetPort: 5000
+    protocol: TCP
+    name: http
+  selector:
+    app: flask-iot-app
+    environment: qa

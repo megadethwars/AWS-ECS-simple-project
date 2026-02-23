@@ -1,0 +1,65 @@
+# Deployment base para Flask IoT App
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-iot-app
+  labels:
+    app: flask-iot-app
+spec:
+  replicas: 1  # Será sobrescrito por ambiente
+  selector:
+    matchLabels:
+      app: flask-iot-app
+  template:
+    metadata:
+      labels:
+        app: flask-iot-app
+    spec:
+      containers:
+      - name: flask-app
+        image: flask-app-local:latest  # Será sobrescrito por ambiente
+        ports:
+        - containerPort: 5000
+        env:
+        - name: APP_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: flask-config
+              key: APP_ENV
+        - name: FLASK_DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: flask-config
+              key: FLASK_DEBUG
+              optional: true
+        - name: FLASK_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: flask-config
+              key: FLASK_HOST
+              optional: true
+        - name: FLASK_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: flask-config
+              key: FLASK_PORT
+              optional: true
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /healthcheck
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /healthcheck  
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10

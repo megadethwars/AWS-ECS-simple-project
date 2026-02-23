@@ -1,0 +1,95 @@
+# Deployment personalizado para ambiente DEV
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-iot-app-dev
+  namespace: flask-app-dev
+  labels:
+    app: flask-iot-app
+    environment: dev
+spec:
+  replicas: 1  # DEV: Solo 1 réplica
+  selector:
+    matchLabels:
+      app: flask-iot-app
+      environment: dev
+  template:
+    metadata:
+      labels:
+        app: flask-iot-app
+        environment: dev
+    spec:
+      containers:
+      - name: flask-app
+        image: flask-app-local:dev  # Imagen específica de DEV
+        ports:
+        - containerPort: 5000
+        env:
+        # Variables desde ConfigMap
+        - name: APP_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: flask-config
+              key: APP_ENV
+        - name: FLASK_DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: flask-config
+              key: FLASK_DEBUG
+        - name: FLASK_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: flask-config
+              key: FLASK_HOST
+        - name: FLASK_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: flask-config
+              key: FLASK_PORT
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: flask-config
+              key: LOG_LEVEL
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: flask-config
+              key: DATABASE_URL
+        # Variables sensibles desde Secret
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: flask-secrets
+              key: SECRET_KEY
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: flask-secrets
+              key: DATABASE_PASSWORD
+        - name: API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: flask-secrets
+              key: API_TOKEN
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"  # DEV: Más recursos para debugging
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /healthcheck
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /healthcheck  
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5

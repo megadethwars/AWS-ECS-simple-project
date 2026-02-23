@@ -1,0 +1,24 @@
+# Namespaces para separar los ambientes
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flask-app-dev
+  labels:
+    environment: dev
+    app: flask-iot-app
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flask-app-qa
+  labels:
+    environment: qa
+    app: flask-iot-app
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flask-app-prod
+  labels:
+    environment: prod
+    app: flask-iot-app

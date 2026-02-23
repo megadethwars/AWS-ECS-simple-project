@@ -1,0 +1,19 @@
+# Service para ambiente PROD
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-iot-service-prod
+  namespace: flask-app-prod
+  labels:
+    app: flask-iot-app
+    environment: prod
+spec:
+  type: ClusterIP  # PROD: ClusterIP + LoadBalancer/Ingress con SSL
+  ports:
+  - port: 80
+    targetPort: 5000
+    protocol: TCP
+    name: http
+  selector:
+    app: flask-iot-app
+    environment: prod

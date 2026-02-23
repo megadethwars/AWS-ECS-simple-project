@@ -1,0 +1,37 @@
+# Ingress para ambiente PROD con SSL
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: flask-iot-ingress-prod
+  namespace: flask-app-prod
+  labels:
+    app: flask-iot-app
+    environment: prod
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"  # PROD: Forzar HTTPS
+    nginx.ingress.kubernetes.io/rate-limit: "50"  # PROD: Rate limiting estricto
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+    nginx.ingress.kubernetes.io/limit-connections: "10"
+    # Configuraciones de seguridad
+    nginx.ingress.kubernetes.io/server-snippet: |
+      add_header X-Frame-Options "SAMEORIGIN" always;
+      add_header X-Content-Type-Options "nosniff" always;
+      add_header X-XSS-Protection "1; mode=block" always;
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+spec:
+  tls:
+  - hosts:
+    - flask-iot-prod.company.com  # Cambiar por dominio real
+    secretName: flask-iot-tls-prod  # Certificado SSL
+  rules:
+  - host: flask-iot-prod.company.com  # Cambiar por dominio real
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: flask-iot-service-prod
+            port:
+              number: 80

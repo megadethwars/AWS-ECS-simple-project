@@ -1,0 +1,20 @@
+# Service para ambiente DEV
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-iot-service-dev
+  namespace: flask-app-dev
+  labels:
+    app: flask-iot-app
+    environment: dev
+spec:
+  type: NodePort  # DEV: NodePort para acceso fácil desde fuera del cluster
+  ports:
+  - port: 80
+    targetPort: 5000
+    nodePort: 30500  # Puerto específico para DEV
+    protocol: TCP
+    name: http
+  selector:
+    app: flask-iot-app
+    environment: dev

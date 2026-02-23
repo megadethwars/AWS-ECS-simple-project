@@ -1,0 +1,25 @@
+# ConfigMap para ambiente QA
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flask-config
+  namespace: flask-app-qa
+  labels:
+    app: flask-iot-app
+    environment: qa
+data:
+  APP_ENV: "qa"
+  FLASK_DEBUG: "False"  # QA: Sin debug
+  FLASK_HOST: "0.0.0.0"
+  FLASK_PORT: "5000"
+  LOG_LEVEL: "INFO"
+  DATABASE_URL: "postgresql://flask_user:password@postgres-qa:5432/flask_qa_db"
+  REDIS_URL: "redis://redis-qa:6379/0"
+  # Variables específicas del ambiente QA
+  API_RATE_LIMIT: "500"  # Más restrictivo que DEV
+  CACHE_TTL: "600"  # 10 minutos
+  MAX_CONTENT_LENGTH: "8388608"  # 8MB
+  # Configuraciones de testing
+  TESTING_ENABLED: "True"
+  MOCK_EXTERNAL_APIs: "True"
+  TEST_DATA_ENABLED: "True"

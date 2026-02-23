@@ -1,0 +1,126 @@
+# Deployment personalizado para ambiente PROD
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-iot-app-prod
+  namespace: flask-app-prod
+  labels:
+    app: flask-iot-app
+    environment: prod
+spec:
+  replicas: 3  # PROD: Múltiples réplicas para alta disponibilidad
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1  # PROD: Mantener servicio durante updates
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: flask-iot-app
+      environment: prod
+  template:
+    metadata:
+      labels:
+        app: flask-iot-app
+        environment: prod
+    spec:
+      containers:
+      - name: flask-app
+        image: flask-app-local:prod  # Imagen específica de PROD
+        ports:
+        - containerPort: 5000
+        env:
+        # Variables desde ConfigMap
+        - name: APP_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: flask-config
+              key: APP_ENV
+        - name: FLASK_DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: flask-config
+              key: FLASK_DEBUG
+        - name: FLASK_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: flask-config
+              key: FLASK_HOST
+        - name: FLASK_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: flask-config
+              key: FLASK_PORT
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: flask-config
+              key: LOG_LEVEL
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: flask-config
+              key: DATABASE_URL
+        - name: WORKERS
+          valueFrom:
+            configMapKeyRef:
+              name: flask-config
+              key: WORKERS
+        # Variables sensibles desde Secret
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: flask-secrets
+              key: SECRET_KEY
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: flask-secrets
+              key: DATABASE_PASSWORD
+        - name: API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: flask-secrets
+              key: API_TOKEN
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: flask-secrets
+              key: JWT_SECRET
+        - name: DB_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: flask-secrets
+              key: DB_ENCRYPTION_KEY
+        resources:
+          requests:
+            memory: "512Mi"  # PROD: Recursos garantizados
+            cpu: "250m"
+          limits:
+            memory: "1Gi"  # PROD: Límites más altos
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /healthcheck
+            port: 5000
+          initialDelaySeconds: 60  # PROD: Más tiempo de startup
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /healthcheck  
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        # PROD: Security context más estricto
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false  # Flask necesita escribir logs
+          capabilities:
+            drop:
+            - ALL

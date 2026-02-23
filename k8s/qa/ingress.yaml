@@ -1,0 +1,26 @@
+# Ingress para ambiente QA
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: flask-iot-ingress-qa
+  namespace: flask-app-qa
+  labels:
+    app: flask-iot-app
+    environment: qa
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"  # QA: Sin SSL por simplicidad
+    nginx.ingress.kubernetes.io/rate-limit: "100"  # Rate limiting en QA
+spec:
+  rules:
+  - host: flask-iot-qa.local  # Cambiar por dominio real
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: flask-iot-service-qa
+            port:
+              number: 80

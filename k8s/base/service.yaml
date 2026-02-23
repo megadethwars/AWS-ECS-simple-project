@@ -1,0 +1,16 @@
+# Service base para Flask IoT App
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-iot-service
+  labels:
+    app: flask-iot-app
+spec:
+  type: ClusterIP  # Puede ser sobrescrito por ambiente (LoadBalancer, NodePort)
+  ports:
+  - port: 80
+    targetPort: 5000
+    protocol: TCP
+    name: http
+  selector:
+    app: flask-iot-app
